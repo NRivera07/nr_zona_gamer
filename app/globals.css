@@ -2,6 +2,29 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+body {
+  background-image: url('/bg-gaming.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* 🔥 efecto elegante */
+}
+
+/* overlay oscuro */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7); /* oscuridad */
+  z-index: -1;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-image: url('/bg-gaming-mobile.jpg');
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
