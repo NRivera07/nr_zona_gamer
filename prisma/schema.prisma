@@ -12,3 +12,24 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id       String @id @default(uuid())
+  name     String @unique
+  password String
+  email    String @unique
+}
+
+model Player {
+  id              String   @id @default(uuid())
+  name            String   @unique
+  phone           String   @unique
+  consoleId       String?  @unique
+  assignedConsole Console? @relation(fields: [consoleId], references: [id])
+}
+
+model Console {
+  id             String  @id @default(uuid())
+  code           String  @unique
+  assignedPlayer Player?
+  status         String
+}

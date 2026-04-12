@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.7.0",
   "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id       String @id @default(uuid())\n  name     String @unique\n  password String\n  email    String @unique\n}\n\nmodel Player {\n  id              String   @id @default(uuid())\n  name            String   @unique\n  phone           String   @unique\n  consoleId       String?  @unique\n  assignedConsole Console? @relation(fields: [consoleId], references: [id])\n}\n\nmodel Console {\n  id             String  @id @default(uuid())\n  code           String  @unique\n  assignedPlayer Player?\n  status         String\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -32,10 +32,10 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"Player\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"consoleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedConsole\",\"kind\":\"object\",\"type\":\"Console\",\"relationName\":\"ConsoleToPlayer\"}],\"dbName\":null},\"Console\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedPlayer\",\"kind\":\"object\",\"type\":\"Player\",\"relationName\":\"ConsoleToPlayer\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 config.parameterizationSchema = {
-  strings: JSON.parse("[]"),
-  graph: "AAAA"
+  strings: JSON.parse("[\"where\",\"User.findUnique\",\"User.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"User.findFirst\",\"User.findFirstOrThrow\",\"User.findMany\",\"data\",\"User.createOne\",\"User.createMany\",\"User.createManyAndReturn\",\"User.updateOne\",\"User.updateMany\",\"User.updateManyAndReturn\",\"create\",\"update\",\"User.upsertOne\",\"User.deleteOne\",\"User.deleteMany\",\"having\",\"_count\",\"_min\",\"_max\",\"User.groupBy\",\"User.aggregate\",\"assignedPlayer\",\"assignedConsole\",\"Player.findUnique\",\"Player.findUniqueOrThrow\",\"Player.findFirst\",\"Player.findFirstOrThrow\",\"Player.findMany\",\"Player.createOne\",\"Player.createMany\",\"Player.createManyAndReturn\",\"Player.updateOne\",\"Player.updateMany\",\"Player.updateManyAndReturn\",\"Player.upsertOne\",\"Player.deleteOne\",\"Player.deleteMany\",\"Player.groupBy\",\"Player.aggregate\",\"Console.findUnique\",\"Console.findUniqueOrThrow\",\"Console.findFirst\",\"Console.findFirstOrThrow\",\"Console.findMany\",\"Console.createOne\",\"Console.createMany\",\"Console.createManyAndReturn\",\"Console.updateOne\",\"Console.updateMany\",\"Console.updateManyAndReturn\",\"Console.upsertOne\",\"Console.deleteOne\",\"Console.deleteMany\",\"Console.groupBy\",\"Console.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"code\",\"status\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"contains\",\"startsWith\",\"endsWith\",\"not\",\"name\",\"phone\",\"consoleId\",\"password\",\"email\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"disconnect\",\"delete\",\"connect\",\"set\"]"),
+  graph: "fRkwBzwAAGEAMD0AAAQAED4AAGEAMD8BAAAAAU0BAAAAAVABAFYAIVEBAAAAAQEAAAABACABAAAAAQAgBzwAAGEAMD0AAAQAED4AAGEAMD8BAFYAIU0BAFYAIVABAFYAIVEBAFYAIQADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAEPwEAAAABTQEAAAABUAEAAAABUQEAAAABAQgAAAkAIAQ_AQAAAAFNAQAAAAFQAQAAAAFRAQAAAAEBCAAACwAwAQgAAAsAMAQ_AQBlACFNAQBlACFQAQBlACFRAQBlACECAAAAAQAgCAAADgAgBD8BAGUAIU0BAGUAIVABAGUAIVEBAGUAIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgAxUAAHYAIBYAAHgAIBcAAHcAIAc8AABgADA9AAAXABA-AABgADA_AQBRACFNAQBRACFQAQBRACFRAQBRACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAgbAABfACA8AABdADA9AAAeABA-AABdADA_AQAAAAFNAQAAAAFOAQAAAAFPAQAAAAEBAAAAGgAgBxoAAFcAIDwAAFUAMD0AABwAED4AAFUAMD8BAFYAIUABAFYAIUEBAFYAIQEAAAAcACAIGwAAXwAgPAAAXQAwPQAAHgAQPgAAXQAwPwEAVgAhTQEAVgAhTgEAVgAhTwEAXgAhAQAAAB4AIAEAAAAaACACGwAAdQAgTwAAbgAgAwAAAB4AIAMAACEAMAQAABoAIAMAAAAeACADAAAhADAEAAAaACADAAAAHgAgAwAAIQAwBAAAGgAgBRsAAHQAID8BAAAAAU0BAAAAAU4BAAAAAU8BAAAAAQEIAAAlACAEPwEAAAABTQEAAAABTgEAAAABTwEAAAABAQgAACcAMAEIAAAnADABAAAAHAAgBRsAAHMAID8BAGUAIU0BAGUAIU4BAGUAIU8BAHIAIQIAAAAaACAIAAArACAEPwEAZQAhTQEAZQAhTgEAZQAhTwEAcgAhAgAAAB4AIAgAAC0AIAIAAAAeACAIAAAtACABAAAAHAAgAwAAABoAIA8AACUAIBAAACsAIAEAAAAaACABAAAAHgAgBBUAAG8AIBYAAHEAIBcAAHAAIE8AAG4AIAc8AABYADA9AAA1ABA-AABYADA_AQBRACFNAQBRACFOAQBRACFPAQBZACEDAAAAHgAgAwAANAAwFAAANQAgAwAAAB4AIAMAACEAMAQAABoAIAcaAABXACA8AABVADA9AAAcABA-AABVADA_AQAAAAFAAQAAAAFBAQBWACEBAAAAOAAgAQAAADgAIAEaAABtACADAAAAHAAgAwAAOwAwBAAAOAAgAwAAABwAIAMAADsAMAQAADgAIAMAAAAcACADAAA7ADAEAAA4ACAEGgAAbAAgPwEAAAABQAEAAAABQQEAAAABAQgAAD8AIAM_AQAAAAFAAQAAAAFBAQAAAAEBCAAAQQAwAQgAAEEAMAQaAABmACA_AQBlACFAAQBlACFBAQBlACECAAAAOAAgCAAARAAgAz8BAGUAIUABAGUAIUEBAGUAIQIAAAAcACAIAABGACACAAAAHAAgCAAARgAgAwAAADgAIA8AAD8AIBAAAEQAIAEAAAA4ACABAAAAHAAgAxUAAGIAIBYAAGQAIBcAAGMAIAY8AABQADA9AABNABA-AABQADA_AQBRACFAAQBRACFBAQBRACEDAAAAHAAgAwAATAAwFAAATQAgAwAAABwAIAMAADsAMAQAADgAIAY8AABQADA9AABNABA-AABQADA_AQBRACFAAQBRACFBAQBRACEOFQAAUwAgFgAAVAAgFwAAVAAgQgEAAAABQwEAAAAERAEAAAAERQEAAAABRgEAAAABRwEAAAABSAEAAAABSQEAAAABSgEAAAABSwEAAAABTAEAUgAhDhUAAFMAIBYAAFQAIBcAAFQAIEIBAAAAAUMBAAAABEQBAAAABEUBAAAAAUYBAAAAAUcBAAAAAUgBAAAAAUkBAAAAAUoBAAAAAUsBAAAAAUwBAFIAIQhCAgAAAAFDAgAAAAREAgAAAARFAgAAAAFGAgAAAAFHAgAAAAFIAgAAAAFMAgBTACELQgEAAAABQwEAAAAERAEAAAAERQEAAAABRgEAAAABRwEAAAABSAEAAAABSQEAAAABSgEAAAABSwEAAAABTAEAVAAhBxoAAFcAIDwAAFUAMD0AABwAED4AAFUAMD8BAFYAIUABAFYAIUEBAFYAIQtCAQAAAAFDAQAAAAREAQAAAARFAQAAAAFGAQAAAAFHAQAAAAFIAQAAAAFJAQAAAAFKAQAAAAFLAQAAAAFMAQBUACEKGwAAXwAgPAAAXQAwPQAAHgAQPgAAXQAwPwEAVgAhTQEAVgAhTgEAVgAhTwEAXgAhUgAAHgAgUwAAHgAgBzwAAFgAMD0AADUAED4AAFgAMD8BAFEAIU0BAFEAIU4BAFEAIU8BAFkAIQ4VAABbACAWAABcACAXAABcACBCAQAAAAFDAQAAAAVEAQAAAAVFAQAAAAFGAQAAAAFHAQAAAAFIAQAAAAFJAQAAAAFKAQAAAAFLAQAAAAFMAQBaACEOFQAAWwAgFgAAXAAgFwAAXAAgQgEAAAABQwEAAAAFRAEAAAAFRQEAAAABRgEAAAABRwEAAAABSAEAAAABSQEAAAABSgEAAAABSwEAAAABTAEAWgAhCEICAAAAAUMCAAAABUQCAAAABUUCAAAAAUYCAAAAAUcCAAAAAUgCAAAAAUwCAFsAIQtCAQAAAAFDAQAAAAVEAQAAAAVFAQAAAAFGAQAAAAFHAQAAAAFIAQAAAAFJAQAAAAFKAQAAAAFLAQAAAAFMAQBcACEIGwAAXwAgPAAAXQAwPQAAHgAQPgAAXQAwPwEAVgAhTQEAVgAhTgEAVgAhTwEAXgAhC0IBAAAAAUMBAAAABUQBAAAABUUBAAAAAUYBAAAAAUcBAAAAAUgBAAAAAUkBAAAAAUoBAAAAAUsBAAAAAUwBAFwAIQkaAABXACA8AABVADA9AAAcABA-AABVADA_AQBWACFAAQBWACFBAQBWACFSAAAcACBTAAAcACAHPAAAYAAwPQAAFwAQPgAAYAAwPwEAUQAhTQEAUQAhUAEAUQAhUQEAUQAhBzwAAGEAMD0AAAQAED4AAGEAMD8BAFYAIU0BAFYAIVABAFYAIVEBAFYAIQAAAAFZAQAAAAEHDwAAZwAgEAAAagAgVAAAaAAgVQAAaQAgVgAAHgAgVwAAHgAgWAAAGgAgAz8BAAAAAU0BAAAAAU4BAAAAAQIAAAAaACAPAABnACADAAAAHgAgDwAAZwAgEAAAawAgBQAAAB4AIAgAAGsAID8BAGUAIU0BAGUAIU4BAGUAIQM_AQBlACFNAQBlACFOAQBlACEDDwAAZwAgVAAAaAAgWAAAGgAgAhsAAHUAIE8AAG4AIAAAAAABWQEAAAABBw8AAHkAIBAAAHwAIFQAAHoAIFUAAHsAIFYAABwAIFcAABwAIFgAADgAIAMPAAB5ACBUAAB6ACBYAAA4ACABGgAAbQAgAAAAAz8BAAAAAUABAAAAAUEBAAAAAQIAAAA4ACAPAAB5ACADAAAAHAAgDwAAeQAgEAAAfQAgBQAAABwAIAgAAH0AID8BAGUAIUABAGUAIUEBAGUAIQM_AQBlACFAAQBlACFBAQBlACEAAAAAAxUABhYABxcACAAAAAMVAAYWAAcXAAgBGx0LARofCgEbKgsBGzALAxUADxYAEBcAEQAAAAMVAA8WABAXABEAAAMVABYWABcXABgAAAADFQAWFgAXFwAYAQIBAgMBBQYBBgcBBwgBCQoBCgwCCw0DDA8BDRECDhIEERMBEhQBExUCGBgFGRkJHBsKHSAKHiIKHyMKICQKISYKIigCIykMJCwKJS4CJi8NJzEKKDIKKTMCKjYOKzcSLDkLLToLLjwLLz0LMD4LMUALMkICM0MTNEULNUcCNkgUN0kLOEoLOUsCOk4VO08Z"
 }
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
@@ -188,7 +188,35 @@ export interface PrismaClient<
     extArgs: ExtArgs
   }>>
 
-    
+      /**
+   * `prisma.user`: Exposes CRUD operations for the **User** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
+    * ```
+    */
+  get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.player`: Exposes CRUD operations for the **Player** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Players
+    * const players = await prisma.player.findMany()
+    * ```
+    */
+  get player(): Prisma.PlayerDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.console`: Exposes CRUD operations for the **Console** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Consoles
+    * const consoles = await prisma.console.findMany()
+    * ```
+    */
+  get console(): Prisma.ConsoleDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {
