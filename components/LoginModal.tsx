@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner } from "./Spinner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { useState } from "react";
 
@@ -27,8 +28,6 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
 
     const data = await res.json();
 
-    console.log(data);
-
     if (data.success) {
       window.location.href = "/control-center";
     } else {
@@ -37,8 +36,20 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
     setLoading(false);
   };
 
+  const handleClose = () => {
+    setName("");
+    setPassword("");
+    setError("");
+    setOpen(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(value) => {
+        if (!value) handleClose();
+      }}
+    >
       <DialogContent
         className="bg-black/80 backdrop-blur-md border border-white/10 
         text-white rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.4)]"
@@ -74,9 +85,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
 
         {/* Botón */}
         {loading ? (
-          <div className="flex justify-center mt-5">
-            <div className="w-6 h-6 border-2 border-white/30 border-t-purple-500 rounded-full animate-spin"></div>
-          </div>
+          <Spinner />
         ) : (
           <button
             className="mt-5 w-full text-center py-3 rounded-xl font-bold 
