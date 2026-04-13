@@ -11,4 +11,5 @@
 export type * from './models/User'
 export type * from './models/Player'
 export type * from './models/Console'
+export type * from './models/Hours'
 export type * from './commonInputTypes'

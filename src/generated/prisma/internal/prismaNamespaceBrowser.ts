@@ -53,7 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Player: 'Player',
-  Console: 'Console'
+  Console: 'Console',
+  Hours: 'Hours'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -99,6 +100,16 @@ export const ConsoleScalarFieldEnum = {
 } as const
 
 export type ConsoleScalarFieldEnum = (typeof ConsoleScalarFieldEnum)[keyof typeof ConsoleScalarFieldEnum]
+
+
+export const HoursScalarFieldEnum = {
+  id: 'id',
+  playerId: 'playerId',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type HoursScalarFieldEnum = (typeof HoursScalarFieldEnum)[keyof typeof HoursScalarFieldEnum]
 
 
 export const SortOrder = {

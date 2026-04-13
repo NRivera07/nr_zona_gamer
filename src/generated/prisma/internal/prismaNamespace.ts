@@ -386,7 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Player: 'Player',
-  Console: 'Console'
+  Console: 'Console',
+  Hours: 'Hours'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "player" | "console"
+    modelProps: "user" | "player" | "console" | "hours"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -628,6 +629,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Hours: {
+      payload: Prisma.$HoursPayload<ExtArgs>
+      fields: Prisma.HoursFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HoursFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HoursFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>
+        }
+        findFirst: {
+          args: Prisma.HoursFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HoursFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>
+        }
+        findMany: {
+          args: Prisma.HoursFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>[]
+        }
+        create: {
+          args: Prisma.HoursCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>
+        }
+        createMany: {
+          args: Prisma.HoursCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HoursCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>[]
+        }
+        delete: {
+          args: Prisma.HoursDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>
+        }
+        update: {
+          args: Prisma.HoursUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>
+        }
+        deleteMany: {
+          args: Prisma.HoursDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HoursUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HoursUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>[]
+        }
+        upsert: {
+          args: Prisma.HoursUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HoursPayload>
+        }
+        aggregate: {
+          args: Prisma.HoursAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHours>
+        }
+        groupBy: {
+          args: Prisma.HoursGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HoursGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HoursCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HoursCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -696,6 +771,16 @@ export const ConsoleScalarFieldEnum = {
 export type ConsoleScalarFieldEnum = (typeof ConsoleScalarFieldEnum)[keyof typeof ConsoleScalarFieldEnum]
 
 
+export const HoursScalarFieldEnum = {
+  id: 'id',
+  playerId: 'playerId',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type HoursScalarFieldEnum = (typeof HoursScalarFieldEnum)[keyof typeof HoursScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -737,6 +822,34 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -851,6 +964,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   player?: Prisma.PlayerOmit
   console?: Prisma.ConsoleOmit
+  hours?: Prisma.HoursOmit
 }
 
 /* Types for Logging */

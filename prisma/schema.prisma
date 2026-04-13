@@ -25,6 +25,7 @@ model Player {
   phone           String   @unique
   consoleId       String?  @unique
   assignedConsole Console? @relation(fields: [consoleId], references: [id])
+  hours           Hours[]
 }
 
 model Console {
@@ -32,4 +33,12 @@ model Console {
   code           String  @unique
   assignedPlayer Player?
   status         String
+}
+
+model Hours {
+  id        String   @id @default(uuid())
+  playerId  String
+  quantity     Float
+  createdAt DateTime @default(now())
+  player    Player   @relation(fields: [playerId], references: [id])
 }

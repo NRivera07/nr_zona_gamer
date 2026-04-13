@@ -56,3 +56,8 @@ export type Player = Prisma.PlayerModel
  * 
  */
 export type Console = Prisma.ConsoleModel
+/**
+ * Model Hours
+ * 
+ */
+export type Hours = Prisma.HoursModel
