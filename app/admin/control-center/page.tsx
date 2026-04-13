@@ -1,7 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/Spinner";
-import { ConsoleType } from "@/src/generated/prisma/types/consoles";
+import { ConsoleType } from "@/types/consoles";
 import { useEffect, useState } from "react";
 
 export default function ControlCenter() {

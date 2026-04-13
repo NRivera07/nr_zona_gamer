@@ -29,7 +29,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
     const data = await res.json();
 
     if (data.success) {
-      window.location.href = "/control-center";
+      window.location.href = "admin/control-center";
     } else {
       setError("Usuario o contraseña incorrectos");
     }
@@ -62,7 +62,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
 
         {/* Input */}
         {error && (
-          <p className=" font-black mt-2 bg-red-400 p-5 text-center rounded">
+          <p className="font-black bg-red-500/80 p-3 rounded text-sm text-center">
             {error}
           </p>
         )}

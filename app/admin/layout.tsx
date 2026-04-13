@@ -20,10 +20,22 @@ export default function AdminLayout({
         <h2 className="text-xl font-extrabold mb-8 text-center">🎮 NR Gamer</h2>
 
         <nav className="flex flex-col gap-3">
-          <MenuItem label="🎮 Consolas" href="/control-center" />
-          <MenuItem label="👤 Jugadores" href="/" />
-          <MenuItem label="⏱ Turnos" href="/" />
-          <MenuItem label="⚙️ Configuración" href="/" />
+          <MenuItem
+            label="🎮 Consolas"
+            href="/admin/control-center"
+            onClick={() => setOpen(false)}
+          />
+          <MenuItem
+            label="👤 Jugadores"
+            href="/admin/players"
+            onClick={() => setOpen(false)}
+          />
+          <MenuItem label="⏱ Turnos" href="/" onClick={() => setOpen(false)} />
+          <MenuItem
+            label="⚙️ Configuración"
+            href="/"
+            onClick={() => setOpen(false)}
+          />
         </nav>
       </aside>
 
@@ -59,10 +71,26 @@ export default function AdminLayout({
               <h2 className="text-xl font-bold mb-6">🎮 NR Gamer</h2>
 
               <nav className="flex flex-col gap-3">
-                <MenuItem label="🎮 Consolas" href="/control-center" />
-                <MenuItem label="👤 Jugadores" href="/" />
-                <MenuItem label="⏱ Turnos" href="/" />
-                <MenuItem label="⚙️ Configuración" href="/" />
+                <MenuItem
+                  label="🎮 Consolas"
+                  href="/admin/control-center"
+                  onClick={() => setOpen(false)}
+                />
+                <MenuItem
+                  label="👤 Jugadores"
+                  href="/admin/players"
+                  onClick={() => setOpen(false)}
+                />
+                <MenuItem
+                  label="⏱ Turnos"
+                  href="/"
+                  onClick={() => setOpen(false)}
+                />
+                <MenuItem
+                  label="⚙️ Configuración"
+                  href="/"
+                  onClick={() => setOpen(false)}
+                />
               </nav>
             </div>
           </div>
@@ -75,7 +103,15 @@ export default function AdminLayout({
   );
 }
 
-function MenuItem({ label, href }: { label: string; href: string }) {
+function MenuItem({
+  label,
+  href,
+  onClick,
+}: {
+  label: string;
+  href: string;
+  onClick?: () => void;
+}) {
   return (
     <Link
       href={href}
@@ -84,6 +120,7 @@ function MenuItem({ label, href }: { label: string; href: string }) {
         hover:scale-105 cursor-pointer
         border border-transparent hover:border-purple-500/40
         shadow hover:shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+      onClick={onClick}
     >
       {label}
     </Link>
