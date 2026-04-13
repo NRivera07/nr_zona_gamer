@@ -24,12 +24,6 @@ body::before {
   z-index: -1;
 }
 
-@media (max-width: 768px) {
-  body {
-    background-image: url('/bg-gaming-mobile.jpg');
-  }
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
