@@ -1,28 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Spinner } from "@/components/Spinner";
 import { PlayerType } from "@/types/players";
 import { CreatePlayerModal } from "@/components/CreatePlayerModal";
+import { useQuery } from "@tanstack/react-query";
 
 const ITEMS_PER_PAGE = 5;
 
 export default function PlayersPage() {
-  const [players, setPlayers] = useState<PlayerType[]>([]);
-  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/players")
-      .then((res) => res.json())
-      .then((data) => setPlayers(data))
-      .finally(() => setLoading(false));
-  }, []);
+  const fetchPlayers = async () => {
+    const res = await fetch("/api/players");
+    return res.json();
+  };
 
+  const { data: players = [], isLoading } = useQuery({
+    queryKey: ["players"],
+    queryFn: fetchPlayers,
+  });
   // 🔍 FILTRO
-  const filteredPlayers = players.filter((player) =>
+  const filteredPlayers = players.filter((player: PlayerType) =>
     player.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -33,7 +34,7 @@ export default function PlayersPage() {
     page * ITEMS_PER_PAGE
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <Spinner size="full" />
@@ -58,17 +59,12 @@ export default function PlayersPage() {
               setSearch(e.target.value);
               setPage(1); // reset paginación
             }}
-            className="px-4 py-2 rounded-xl bg-white/10 border border-white/20
-            focus:outline-none focus:ring-2 focus:ring-purple-500
-            placeholder:text-gray-400"
+            className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-400"
           />
 
           {/* ➕ BOTÓN CREAR */}
           <button
-            className="px-4 py-2 rounded-xl font-semibold
-            bg-gradient-to-r from-purple-600 to-pink-600
-            hover:scale-105 active:scale-95 transition-all
-            shadow-[0_0_10px_rgba(168,85,247,0.6)]"
+            className="px-4 py-2 rounded-xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-105 active:scale-95 transition-all shadow-[0_0_10px_rgba(168,85,247,0.6)]"
             onClick={() => setCreateModalOpen(true)}
           >
             + Nuevo
@@ -89,20 +85,17 @@ export default function PlayersPage() {
 
         {/* FILAS */}
         {paginatedPlayers.length ? (
-          paginatedPlayers.map((player) => {
+          paginatedPlayers.map((player: PlayerType) => {
             const hasConsole = player.assignedConsole;
             const totalHours = (player.hours || []).reduce(
               (acc, h) => acc + Number(h.quantity),
               0
             );
 
-            console.log("Holas", player);
-
             return (
               <div
                 key={player.id}
-                className="grid grid-cols-5 px-6 py-4 text-sm items-center
-                border-b border-white/5 hover:bg-white/5 transition-all"
+                className="grid grid-cols-5 px-6 py-4 text-sm items-center border-b border-white/5 hover:bg-white/5 transition-all"
               >
                 <span className="font-semibold">{player.name}</span>
 
@@ -114,27 +107,21 @@ export default function PlayersPage() {
                       🎮 {player.assignedConsole?.code}
                     </span>
                   ) : (
-                    <span className="opacity-40">Ningunar</span>
+                    <span className="opacity-40">Ninguna</span>
                   )}
                 </span>
                 <span className="text-purple-400 font-semibold">
-                  ⏱ {totalHours.toFixed(1)}h
+                  ⏱ {totalHours}h
                 </span>
 
                 <div className="flex justify-end gap-3">
                   {/* Editar */}
-                  <button
-                    className="p-2 rounded-lg hover:bg-white/10 transition-all
-    hover:scale-110"
-                  >
+                  <button className="p-2 rounded-lg hover:bg-white/10 transition-all hover:scale-110">
                     ✏️
                   </button>
 
                   {/* Eliminar */}
-                  <button
-                    className="p-2 rounded-lg hover:bg-red-600/20 transition-all
-    hover:scale-110"
-                  >
+                  <button className="p-2 rounded-lg hover:bg-red-600/20 transition-all hover:scale-110">
                     🗑️
                   </button>
                 </div>

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import "react-toastify/dist/ReactToastify.css";
+import { Providers } from "./Providers";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -27,7 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html className={cn("antialiased", orbitron.variable, rajdhani.variable)}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

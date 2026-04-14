@@ -13,10 +13,7 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-screen text-white">
       {/* 🔥 SIDEBAR DESKTOP */}
-      <aside
-        className="hidden lg:flex w-64 flex-col 
-        bg-black/60 backdrop-blur-md border-r border-white/10 p-4"
-      >
+      <aside className="hidden lg:flex w-64 flex-col bg-black/60 backdrop-blur-md border-r border-white/10 p-4">
         <h2 className="text-xl font-extrabold mb-8 text-center">🎮 NR Gamer</h2>
 
         <nav className="flex flex-col gap-3">
@@ -42,10 +39,7 @@ export default function AdminLayout({
       {/* 🔥 CONTENIDO */}
       <div className="flex-1 flex flex-col">
         {/* 📱 HEADER MOBILE */}
-        <header
-          className="lg:hidden flex items-center justify-between p-4 
-          bg-black/60 backdrop-blur-md border-b border-white/10"
-        >
+        <header className="lg:hidden flex items-center justify-between p-4 bg-black/60 backdrop-blur-md border-b border-white/10">
           <h1 className="font-bold">🎮 NR Gamer</h1>
 
           <button onClick={() => setOpen(true)} className="text-2xl">
@@ -63,11 +57,7 @@ export default function AdminLayout({
             />
 
             {/* drawer */}
-            <div
-              className="w-64 bg-black p-5 
-              border-l border-white/10 
-              shadow-[0_0_20px_rgba(0,0,0,0.8)]"
-            >
+            <div className="w-64 bg-black p-5 border-l border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.8)]">
               <h2 className="text-xl font-bold mb-6">🎮 NR Gamer</h2>
 
               <nav className="flex flex-col gap-3">
@@ -115,11 +105,7 @@ function MenuItem({
   return (
     <Link
       href={href}
-      className="block px-4 py-3 rounded-xl transition-all
-        bg-white/5 hover:bg-white/10
-        hover:scale-105 cursor-pointer
-        border border-transparent hover:border-purple-500/40
-        shadow hover:shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+      className="block px-4 py-3 rounded-xl transition-all bg-white/5 hover:bg-white/10 hover:scale-105 cursor-pointer border border-transparent hover:border-purple-500/40 shadow hover:shadow-[0_0_10px_rgba(168,85,247,0.5)]"
       onClick={onClick}
     >
       {label}

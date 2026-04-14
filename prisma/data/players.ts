@@ -2,6 +2,6 @@ export const players = [
   {
     name: "Nohelia Rivera",
     phone: "555-1234",
-    consoleId: "41149c77-1a48-4d61-8f48-167cf90b41b5",
+    consoleId: "a2c86110-cb56-4ee8-a6c4-d69ec39ed7d9",
   },
 ];

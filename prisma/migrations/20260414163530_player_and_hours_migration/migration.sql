@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Hours" ALTER COLUMN "quantity" SET DATA TYPE DOUBLE PRECISION;

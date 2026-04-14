@@ -2,6 +2,7 @@ export type PlayerType = {
   id: string;
   name: string;
   phone: string;
+  email: string;
 
   assignedConsole?: {
     id: string;
@@ -9,7 +10,7 @@ export type PlayerType = {
     code: string;
   } | null;
 
-  hours: {
+  hours?: {
     id: string;
     playerId: string;
     quantity: number;

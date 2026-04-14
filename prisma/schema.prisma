@@ -31,14 +31,14 @@ model Player {
 model Console {
   id             String  @id @default(uuid())
   code           String  @unique
-  assignedPlayer Player?
+  assignedPlayer Player? @relation
   status         String
 }
 
 model Hours {
   id        String   @id @default(uuid())
   playerId  String
-  quantity     Float
+  quantity  Float
   createdAt DateTime @default(now())
   player    Player   @relation(fields: [playerId], references: [id])
 }
