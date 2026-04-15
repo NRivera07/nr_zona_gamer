@@ -1,29 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Spinner } from "./Spinner";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PlayerType } from "@/types/players";
 
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  player?: PlayerType;
+  isEdit?: boolean;
 };
 
-export function CreatePlayerModal({ open, setOpen }: Props) {
+export function PlayerForm({ open, setOpen, player, isEdit }: Props) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [hours, setHours] = useState(0);
+  const [hours, setHours] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (player && isEdit) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setName(player.name || "");
+      setPhone(player.phone || "");
+    }
+  }, [player, isEdit]);
 
   const handleClose = () => {
     setName("");
     setPhone("");
-    setEmail("");
-    setHours(0);
+    setHours("");
     setError("");
     setOpen(false);
     setLoading(false);
@@ -35,7 +44,7 @@ export function CreatePlayerModal({ open, setOpen }: Props) {
     mutationFn: async (newPlayer: {
       name: string;
       phone: string;
-      hours: number;
+      hours: number | "";
     }) => {
       const res = await fetch("/api/players", {
         method: "POST",
@@ -58,6 +67,24 @@ export function CreatePlayerModal({ open, setOpen }: Props) {
     },
   });
 
+  const updatePlayerMutation = useMutation({
+    mutationFn: async (playerId: string) => {
+      await fetch(`/api/players/${playerId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name,
+          phone,
+        }),
+      });
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["players"] });
+      toast.success("Jugador editado exitosamente");
+      setOpen(false);
+    },
+  });
+
   const handleSubmit = () => {
     if (!name) {
       setError("El nombre es obligatorio");
@@ -66,6 +93,10 @@ export function CreatePlayerModal({ open, setOpen }: Props) {
 
     setLoading(true);
 
+    if (isEdit && player) {
+      updatePlayerMutation.mutate(player.id);
+      return;
+    }
     createPlayerMutation.mutate(
       {
         name,
@@ -88,7 +119,7 @@ export function CreatePlayerModal({ open, setOpen }: Props) {
       >
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
-            👤 Nuevo Jugador
+            {isEdit ? "✏️ Editar jugador" : "👤 Crear nuevo jugador"}
           </DialogTitle>
         </DialogHeader>
 

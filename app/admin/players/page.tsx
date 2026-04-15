@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Spinner } from "@/components/Spinner";
 import { PlayerType } from "@/types/players";
-import { CreatePlayerModal } from "@/components/CreatePlayerModal";
-import { useQuery } from "@tanstack/react-query";
+import { PlayerForm } from "@/components/PlayerForm";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertModal } from "@/components/AlertModal";
+import { toast } from "react-toastify";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -12,16 +14,47 @@ export default function PlayersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState({
+    name: "",
+    id: "",
+    phone: "",
+  });
 
   const fetchPlayers = async () => {
     const res = await fetch("/api/players");
     return res.json();
   };
 
-  const { data: players = [], isLoading } = useQuery({
+  const {
+    data: players = [],
+    isLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ["players"],
     queryFn: fetchPlayers,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
+
+  const queryClient = useQueryClient();
+
+  const deletePlayerMutation = useMutation({
+    mutationFn: async (playerId: string) => {
+      await fetch(`/api/players/${playerId}`, {
+        method: "DELETE",
+      });
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["players"] });
+      toast.success("Jugador eliminado exitosamente");
+      setDeleteModalOpen(false);
+    },
+  });
+
   // 🔍 FILTRO
   const filteredPlayers = players.filter((player: PlayerType) =>
     player.name.toLowerCase().includes(search.toLowerCase())
@@ -34,7 +67,7 @@ export default function PlayersPage() {
     page * ITEMS_PER_PAGE
   );
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <Spinner size="full" />
@@ -87,6 +120,7 @@ export default function PlayersPage() {
         {paginatedPlayers.length ? (
           paginatedPlayers.map((player: PlayerType) => {
             const hasConsole = player.assignedConsole;
+            const hasPhone = player.phone && player.phone.trim() !== "";
             const totalHours = (player.hours || []).reduce(
               (acc, h) => acc + Number(h.quantity),
               0
@@ -99,7 +133,11 @@ export default function PlayersPage() {
               >
                 <span className="font-semibold">{player.name}</span>
 
-                <span className="opacity-70">{player.phone}</span>
+                {hasPhone ? (
+                  <span className="opacity-70">{player.phone}</span>
+                ) : (
+                  <span className="opacity-40">Ninguno</span>
+                )}
 
                 <span>
                   {hasConsole ? (
@@ -116,12 +154,32 @@ export default function PlayersPage() {
 
                 <div className="flex justify-end gap-3">
                   {/* Editar */}
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-all hover:scale-110">
+                  <button
+                    className="p-2 rounded-lg hover:bg-white/10 transition-all hover:scale-110"
+                    onClick={() => {
+                      setSelectedPlayer({
+                        name: player.name,
+                        id: player.id,
+                        phone: player.phone,
+                      });
+                      setEditModalOpen(true);
+                    }}
+                  >
                     ✏️
                   </button>
 
                   {/* Eliminar */}
-                  <button className="p-2 rounded-lg hover:bg-red-600/20 transition-all hover:scale-110">
+                  <button
+                    className="p-2 rounded-lg hover:bg-red-600/20 transition-all hover:scale-110"
+                    onClick={() => {
+                      setSelectedPlayer({
+                        name: player.name,
+                        id: player.id,
+                        phone: player.phone,
+                      });
+                      setDeleteModalOpen(true);
+                    }}
+                  >
                     🗑️
                   </button>
                 </div>
@@ -159,7 +217,28 @@ export default function PlayersPage() {
           </button>
         </div>
       )}
-      <CreatePlayerModal open={createModalOpen} setOpen={setCreateModalOpen} />
+      <PlayerForm
+        open={!editModalOpen ? createModalOpen : editModalOpen}
+        setOpen={!editModalOpen ? setCreateModalOpen : setEditModalOpen}
+        player={editModalOpen ? selectedPlayer : undefined}
+        isEdit={editModalOpen}
+      />
+      <AlertModal
+        open={deleteModalOpen}
+        title="Eliminar jugador"
+        message={`¿Estás seguro de eliminar a ${selectedPlayer.name}? Esta acción no se puede deshacer.`}
+        icon="warning"
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setSelectedPlayer({ name: "", id: "", phone: "" });
+        }}
+        loading={deletePlayerMutation.isPending}
+        onConfirm={() => {
+          if (selectedPlayer.id) {
+            deletePlayerMutation.mutate(selectedPlayer.id);
+          }
+        }}
+      />
     </div>
   );
 }

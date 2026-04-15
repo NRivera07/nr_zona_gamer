@@ -1,21 +1,70 @@
 "use client";
 
+import { AssignPlayerModal } from "@/components/AssingPlayerModal";
 import { Spinner } from "@/components/Spinner";
 import { ConsoleType } from "@/types/consoles";
-import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ControlCenter() {
-  const [consoles, setConsoles] = useState<ConsoleType[]>([]);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [selectedConsoleId, setSelectedConsoleId] = useState<string>("");
 
-  useEffect(() => {
-    fetch("/api/consoles")
-      .then((res) => res.json())
-      .then((data) => setConsoles(data));
-  }, []);
+  const queryClient = useQueryClient();
+
+  const fetchConsoles = async () => {
+    const res = await fetch("/api/consoles");
+    return res.json();
+  };
+
+  const {
+    data: consoles = [],
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ["consoles"],
+    queryFn: fetchConsoles,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
+
+  const releaseConsoleMutation = useMutation({
+    mutationFn: async (assignedPlayer: { playerId: string }) => {
+      await fetch("/api/consoles/release", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          playerId: assignedPlayer.playerId,
+        }),
+      });
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consoles"] });
+      toast.success("La consola se ha liberado exitosamente");
+    },
+    onError: () => {
+      toast.error("Error al liberar consola");
+    },
+  });
+
+  const { mutate, isPending } = releaseConsoleMutation;
+
+  const releaseConsole = (playerId: string) => {
+    mutate({ playerId });
+  };
 
   return (
     <>
-      {consoles?.length ? (
+      {isLoading || isFetching ? (
+        <div className="min-h-screen flex justify-center items-center">
+          <Spinner size="full" />
+        </div>
+      ) : (
         <div className="min-h-screen text-white p-6">
           {/* 🔥 TÍTULO */}
           <h1 className="text-3xl md:text-4xl font-extrabold mb-8 text-center">
@@ -26,7 +75,7 @@ export default function ControlCenter() {
           <div className="bg-black/40 backdrop-blur-sm rounded-3xl p-6">
             {/* GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {consoles.map((console) => {
+              {consoles.map((console: ConsoleType) => {
                 const isOccupied = console.assignedPlayer;
 
                 return (
@@ -82,8 +131,26 @@ export default function ControlCenter() {
                             ? "bg-red-600 hover:bg-red-700 shadow-[0_0_10px_rgba(239,68,68,0.5)]"
                             : "bg-green-600 hover:bg-green-700 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
                         }`}
+                        onClick={() => {
+                          setSelectedConsoleId(console.id);
+                          if (!isOccupied) {
+                            setAssignModalOpen(true);
+                            return;
+                          }
+                          if (console.assignedPlayer?.id) {
+                            releaseConsole(console.assignedPlayer.id);
+                          }
+                        }}
                       >
-                        {isOccupied ? "🔓 Liberar" : "🎮 Asignar"}
+                        {isPending &&
+                        selectedConsoleId ===
+                          console.assignedPlayer?.consoleId ? (
+                          <Spinner size="md" />
+                        ) : isOccupied ? (
+                          "🔓 Liberar"
+                        ) : (
+                          "🎮 Asignar"
+                        )}
                       </button>
                     </div>
                   </div>
@@ -92,11 +159,12 @@ export default function ControlCenter() {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="min-h-screen flex justify-center items-center">
-          <Spinner size="full" />
-        </div>
       )}
+      <AssignPlayerModal
+        open={assignModalOpen}
+        setOpen={setAssignModalOpen}
+        consoleId={selectedConsoleId}
+      />
     </>
   );
 }

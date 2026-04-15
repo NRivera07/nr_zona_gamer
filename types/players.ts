@@ -2,7 +2,6 @@ export type PlayerType = {
   id: string;
   name: string;
   phone: string;
-  email: string;
 
   assignedConsole?: {
     id: string;
