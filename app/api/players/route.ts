@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, phone, hours } = body;
+    const { name, phone, email, hours } = body;
 
     if (!name) {
       return NextResponse.json(
@@ -24,29 +24,44 @@ export async function POST(req: Request) {
       );
     }
 
+    const availableConsole = await prismaClient.console.findFirst({
+      where: {
+        assignedPlayer: null,
+      },
+    });
+
     const player = await prismaClient.player.create({
       data: {
         name,
         phone,
+        email,
 
-        ...(hours !== null &&
-          hours !== undefined &&
-          hours !== "" && {
-            hours: {
-              create: {
-                quantity: Number(hours),
-              },
+        ...(hours && {
+          hours: {
+            create: {
+              quantity: hours,
             },
-          }),
-      },
-      include: {
-        hours: true,
+          },
+        }),
       },
     });
+
+    // 🔥 3. Si NO hay consolas → agregar a cola
+    if (!availableConsole) {
+      await prismaClient.queue.create({
+        data: {
+          playerId: player.id,
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,
       player,
+      addedToQueue: !availableConsole,
+      message: availableConsole
+        ? "Jugador creado, seleccione consola"
+        : "Todas las consolas ocupadas, agregado a la cola",
     });
   } catch (error: unknown) {
     console.error(error);

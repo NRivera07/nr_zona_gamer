@@ -27,7 +27,11 @@ export default function AdminLayout({
             href="/admin/players"
             onClick={() => setOpen(false)}
           />
-          <MenuItem label="⏱ Turnos" href="/" onClick={() => setOpen(false)} />
+          <MenuItem
+            label="⏱ Turnos"
+            href="/admin/hours"
+            onClick={() => setOpen(false)}
+          />
           <MenuItem
             label="⚙️ Configuración"
             href="/"
@@ -73,7 +77,7 @@ export default function AdminLayout({
                 />
                 <MenuItem
                   label="⏱ Turnos"
-                  href="/"
+                  href="/admin/hours"
                   onClick={() => setOpen(false)}
                 />
                 <MenuItem

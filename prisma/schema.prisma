@@ -22,10 +22,11 @@ model User {
 model Player {
   id              String   @id @default(uuid())
   name            String   @unique
-  phone           String   @unique
+  phone           String   
   consoleId       String?  @unique
   assignedConsole Console? @relation(fields: [consoleId], references: [id])
   hours           Hours[]
+  queues          Queue[]
 }
 
 model Console {
@@ -39,6 +40,13 @@ model Hours {
   id        String   @id @default(uuid())
   playerId  String
   quantity  Float
+  createdAt DateTime @default(now())
+  player    Player   @relation(fields: [playerId], references: [id])
+}
+
+model Queue {
+  id        String   @id @default(uuid())
+  playerId  String
   createdAt DateTime @default(now())
   player    Player   @relation(fields: [playerId], references: [id])
 }

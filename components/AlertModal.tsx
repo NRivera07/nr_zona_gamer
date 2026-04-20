@@ -8,8 +8,9 @@ type Props = {
   icon?: "warning" | "error" | "success";
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   loading?: boolean;
+  hiddenAction?: boolean;
 };
 
 export function AlertModal({
@@ -20,6 +21,7 @@ export function AlertModal({
   onClose,
   onConfirm,
   loading,
+  hiddenAction = false,
 }: Props) {
   const icons = {
     warning: "⚠️",
@@ -38,26 +40,30 @@ export function AlertModal({
           </DialogTitle>
         </DialogHeader>
 
-        <p className="text-center opacity-70 mt-2">{message}</p>
+        <p className={hiddenAction ? `text-center opacity-70 mt-2 p-4` : `text-center opacity-70 mt-2`}>{message}</p>
 
-        {/* BOTONES */}
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={onClose}
-            disabled={loading}
-            className="flex-1 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition"
-          >
-            Cancelar
-          </button>
+        {!hiddenAction && (
+          <>
+            {/* BOTONES */}
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={onClose}
+                disabled={loading}
+                className="flex-1 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition"
+              >
+                Cancelar
+              </button>
 
-          <button
-            onClick={onConfirm}
-            disabled={loading}
-            className="flex-1 py-2 rounded-xl bg-red-600 hover:bg-red-700 transition"
-          >
-            {loading ? "Eliminando..." : "Eliminar"}
-          </button>
-        </div>
+              <button
+                onClick={onConfirm}
+                disabled={loading}
+                className="flex-1 py-2 rounded-xl bg-red-600 hover:bg-red-700 transition"
+              >
+                {loading ? "Eliminando..." : "Eliminar"}
+              </button>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

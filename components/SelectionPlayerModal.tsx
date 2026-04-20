@@ -4,21 +4,28 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Spinner } from "./Spinner";
 import { PlayerType } from "@/types/players";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { Player } from "@/src/generated/prisma/client";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  consoleId: string;
+  onSelect: (playerId: string) => void;
+  setSelectedPlayer: (player: PlayerType) => void;
+  consoleId?: string;
+  selectedPlayer?: PlayerType;
+  isPending: boolean;
 };
 
-export function AssignPlayerModal({ open, setOpen, consoleId }: Props) {
+export function SelectionPlayerModal({
+  open,
+  setOpen,
+  onSelect,
+  isPending,
+  setSelectedPlayer,
+  selectedPlayer,
+}: Props) {
   const [search, setSearch] = useState("");
-  const [selectedPlayerId, setSelectedPlayerId] = useState<string>("");
-
-  const queryClient = useQueryClient();
 
   const fetchPlayers = async () => {
     const res = await fetch("/api/players");
@@ -38,36 +45,6 @@ export function AssignPlayerModal({ open, setOpen, consoleId }: Props) {
   const filtered = players.filter((p: Player) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
-
-  const assingPlayerMutation = useMutation({
-    mutationFn: async (assignedPlayer: { playerId: string }) => {
-      await fetch("/api/consoles/assign", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          consoleId,
-          playerId: assignedPlayer.playerId,
-        }),
-      });
-    },
-
-    onSuccess: () => {
-      toast.success("Jugador asignado exitosamente");
-      setOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["consoles"] });
-    },
-    onError: () => {
-      toast.error("Error al asignar el jugador");
-    },
-  });
-
-  const { mutate, isPending } = assingPlayerMutation;
-
-  const handleAssign = (playerId: string) => {
-    mutate({ playerId });
-  };
 
   return (
     <>
@@ -105,8 +82,8 @@ export function AssignPlayerModal({ open, setOpen, consoleId }: Props) {
                   key={player.id}
                   onClick={() => {
                     if (!player.assignedConsole) {
-                      setSelectedPlayerId(player.id);
-                      handleAssign(player.id);
+                      setSelectedPlayer(player);
+                      onSelect(player.id);
                     }
                   }}
                   className="flex justify-between items-center px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-transparent hover:border-purple-500/40 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
@@ -114,7 +91,7 @@ export function AssignPlayerModal({ open, setOpen, consoleId }: Props) {
                 >
                   <span className="font-semibold">{player.name}</span>
 
-                  {isPending && selectedPlayerId === player.id ? (
+                  {isPending && selectedPlayer?.id === player.id ? (
                     <Spinner size="sm" />
                   ) : player.assignedConsole ? (
                     <span className="text-xs text-red-400">Ocupado 🎮</span>

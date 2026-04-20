@@ -387,7 +387,8 @@ export const ModelName = {
   User: 'User',
   Player: 'Player',
   Console: 'Console',
-  Hours: 'Hours'
+  Hours: 'Hours',
+  Queue: 'Queue'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "player" | "console" | "hours"
+    modelProps: "user" | "player" | "console" | "hours" | "queue"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Queue: {
+      payload: Prisma.$QueuePayload<ExtArgs>
+      fields: Prisma.QueueFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QueueFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QueueFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>
+        }
+        findFirst: {
+          args: Prisma.QueueFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QueueFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>
+        }
+        findMany: {
+          args: Prisma.QueueFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>[]
+        }
+        create: {
+          args: Prisma.QueueCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>
+        }
+        createMany: {
+          args: Prisma.QueueCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QueueCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>[]
+        }
+        delete: {
+          args: Prisma.QueueDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>
+        }
+        update: {
+          args: Prisma.QueueUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>
+        }
+        deleteMany: {
+          args: Prisma.QueueDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QueueUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QueueUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>[]
+        }
+        upsert: {
+          args: Prisma.QueueUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueuePayload>
+        }
+        aggregate: {
+          args: Prisma.QueueAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQueue>
+        }
+        groupBy: {
+          args: Prisma.QueueGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QueueGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QueueCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QueueCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -779,6 +854,15 @@ export const HoursScalarFieldEnum = {
 } as const
 
 export type HoursScalarFieldEnum = (typeof HoursScalarFieldEnum)[keyof typeof HoursScalarFieldEnum]
+
+
+export const QueueScalarFieldEnum = {
+  id: 'id',
+  playerId: 'playerId',
+  createdAt: 'createdAt'
+} as const
+
+export type QueueScalarFieldEnum = (typeof QueueScalarFieldEnum)[keyof typeof QueueScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -965,6 +1049,7 @@ export type GlobalOmitConfig = {
   player?: Prisma.PlayerOmit
   console?: Prisma.ConsoleOmit
   hours?: Prisma.HoursOmit
+  queue?: Prisma.QueueOmit
 }
 
 /* Types for Logging */

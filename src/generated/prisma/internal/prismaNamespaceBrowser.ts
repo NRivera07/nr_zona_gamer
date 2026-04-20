@@ -54,7 +54,8 @@ export const ModelName = {
   User: 'User',
   Player: 'Player',
   Console: 'Console',
-  Hours: 'Hours'
+  Hours: 'Hours',
+  Queue: 'Queue'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -110,6 +111,15 @@ export const HoursScalarFieldEnum = {
 } as const
 
 export type HoursScalarFieldEnum = (typeof HoursScalarFieldEnum)[keyof typeof HoursScalarFieldEnum]
+
+
+export const QueueScalarFieldEnum = {
+  id: 'id',
+  playerId: 'playerId',
+  createdAt: 'createdAt'
+} as const
+
+export type QueueScalarFieldEnum = (typeof QueueScalarFieldEnum)[keyof typeof QueueScalarFieldEnum]
 
 
 export const SortOrder = {

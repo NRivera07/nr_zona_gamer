@@ -1,21 +1,40 @@
 "use client";
 
-import { AssignPlayerModal } from "@/components/AssingPlayerModal";
+import { SelectionPlayerModal } from "@/components/SelectionPlayerModal";
+import { QueueList } from "@/components/QueueList";
 import { Spinner } from "@/components/Spinner";
 import { ConsoleType } from "@/types/consoles";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { PlayerType } from "@/types/players";
 
 export default function ControlCenter() {
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [selectedConsoleId, setSelectedConsoleId] = useState<string>("");
-
+  const [selectedPlayer, setSelectedPlayer] = useState<PlayerType>();
   const queryClient = useQueryClient();
 
   const fetchConsoles = async () => {
     const res = await fetch("/api/consoles");
     return res.json();
+  };
+
+  const speak = (text: string) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voices = speechSynthesis.getVoices();
+
+    const voice =
+      voices.find((v) => v.lang === "es-MX") ||
+      voices.find((v) => v.lang.startsWith("es"));
+
+    if (voice) utterance.voice = voice;
+
+    utterance.rate = 0.85;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    speechSynthesis.speak(utterance);
   };
 
   const {
@@ -31,31 +50,77 @@ export default function ControlCenter() {
   });
 
   const releaseConsoleMutation = useMutation({
+    mutationFn: async (playerId: string) => {
+      const res = await fetch("/api/consoles/release", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ playerId }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message);
+
+      return data;
+    },
+
+    onSuccess: (data) => {
+      toast.success("Consola liberada");
+
+      // 🔥 SI SE ASIGNÓ A ALGUIEN
+      if (data.reassigned) {
+        const message = `Atención ${data.playerName}, tu turno ha llegado. Dirígete a la consola ${data.consoleName}`;
+
+        speak(message);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["consoles"] });
+      queryClient.invalidateQueries({ queryKey: ["queue"] });
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const { mutate: mutateRelease, isPending: isPendingRelease } =
+    releaseConsoleMutation;
+
+  const releaseConsole = (playerId: string) => {
+    mutateRelease(playerId);
+  };
+
+  const assingPlayerMutation = useMutation({
     mutationFn: async (assignedPlayer: { playerId: string }) => {
-      await fetch("/api/consoles/release", {
+      const res = await fetch("/api/consoles/assign", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          consoleId: selectedConsoleId,
           playerId: assignedPlayer.playerId,
         }),
       });
     },
 
     onSuccess: () => {
+      toast.success("Jugador asignado exitosamente");
+      setAssignModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ["consoles"] });
-      toast.success("La consola se ha liberado exitosamente");
     },
-    onError: () => {
-      toast.error("Error al liberar consola");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
-  const { mutate, isPending } = releaseConsoleMutation;
+  const { mutate: mutateAssign, isPending: isPendingAssign } =
+    assingPlayerMutation;
 
-  const releaseConsole = (playerId: string) => {
-    mutate({ playerId });
+  const handleAssign = (playerId: string) => {
+    mutateAssign({ playerId });
   };
 
   return (
@@ -71,7 +136,9 @@ export default function ControlCenter() {
             🎮 Centro de control
           </h1>
 
-          {/* 🔥 CONTENEDOR GENERAL (para separar del fondo) */}
+          <div className="mb-6">
+            <QueueList />
+          </div>
           <div className="bg-black/40 backdrop-blur-sm rounded-3xl p-6">
             {/* GRID */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -142,7 +209,7 @@ export default function ControlCenter() {
                           }
                         }}
                       >
-                        {isPending &&
+                        {isPendingRelease &&
                         selectedConsoleId ===
                           console.assignedPlayer?.consoleId ? (
                           <Spinner size="md" />
@@ -160,10 +227,14 @@ export default function ControlCenter() {
           </div>
         </div>
       )}
-      <AssignPlayerModal
+      <SelectionPlayerModal
         open={assignModalOpen}
         setOpen={setAssignModalOpen}
         consoleId={selectedConsoleId}
+        isPending={isPendingAssign}
+        onSelect={handleAssign}
+        setSelectedPlayer={setSelectedPlayer}
+        selectedPlayer={selectedPlayer}
       />
     </>
   );

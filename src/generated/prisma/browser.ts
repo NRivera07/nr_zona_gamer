@@ -37,3 +37,8 @@ export type Console = Prisma.ConsoleModel
  * 
  */
 export type Hours = Prisma.HoursModel
+/**
+ * Model Queue
+ * 
+ */
+export type Queue = Prisma.QueueModel

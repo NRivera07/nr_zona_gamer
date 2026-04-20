@@ -69,19 +69,28 @@ export function PlayerForm({ open, setOpen, player, isEdit }: Props) {
 
   const updatePlayerMutation = useMutation({
     mutationFn: async (playerId: string) => {
-      await fetch(`/api/players/${playerId}`, {
+      const res = await fetch(`/api/players/${playerId}`, {
         method: "PUT",
         body: JSON.stringify({
           name,
           phone,
         }),
       });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
+      return data;
     },
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["players"] });
       toast.success("Jugador editado exitosamente");
       setOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

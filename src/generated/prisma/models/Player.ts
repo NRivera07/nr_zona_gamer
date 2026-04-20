@@ -176,6 +176,7 @@ export type PlayerWhereInput = {
   consoleId?: Prisma.StringNullableFilter<"Player"> | string | null
   assignedConsole?: Prisma.XOR<Prisma.ConsoleNullableScalarRelationFilter, Prisma.ConsoleWhereInput> | null
   hours?: Prisma.HoursListRelationFilter
+  queues?: Prisma.QueueListRelationFilter
 }
 
 export type PlayerOrderByWithRelationInput = {
@@ -185,19 +186,21 @@ export type PlayerOrderByWithRelationInput = {
   consoleId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedConsole?: Prisma.ConsoleOrderByWithRelationInput
   hours?: Prisma.HoursOrderByRelationAggregateInput
+  queues?: Prisma.QueueOrderByRelationAggregateInput
 }
 
 export type PlayerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   name?: string
-  phone?: string
   consoleId?: string
   AND?: Prisma.PlayerWhereInput | Prisma.PlayerWhereInput[]
   OR?: Prisma.PlayerWhereInput[]
   NOT?: Prisma.PlayerWhereInput | Prisma.PlayerWhereInput[]
+  phone?: Prisma.StringFilter<"Player"> | string
   assignedConsole?: Prisma.XOR<Prisma.ConsoleNullableScalarRelationFilter, Prisma.ConsoleWhereInput> | null
   hours?: Prisma.HoursListRelationFilter
-}, "id" | "name" | "phone" | "consoleId">
+  queues?: Prisma.QueueListRelationFilter
+}, "id" | "name" | "consoleId">
 
 export type PlayerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -225,6 +228,7 @@ export type PlayerCreateInput = {
   phone: string
   assignedConsole?: Prisma.ConsoleCreateNestedOneWithoutAssignedPlayerInput
   hours?: Prisma.HoursCreateNestedManyWithoutPlayerInput
+  queues?: Prisma.QueueCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateInput = {
@@ -233,6 +237,7 @@ export type PlayerUncheckedCreateInput = {
   phone: string
   consoleId?: string | null
   hours?: Prisma.HoursUncheckedCreateNestedManyWithoutPlayerInput
+  queues?: Prisma.QueueUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUpdateInput = {
@@ -241,6 +246,7 @@ export type PlayerUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   assignedConsole?: Prisma.ConsoleUpdateOneWithoutAssignedPlayerNestedInput
   hours?: Prisma.HoursUpdateManyWithoutPlayerNestedInput
+  queues?: Prisma.QueueUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateInput = {
@@ -249,6 +255,7 @@ export type PlayerUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   consoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hours?: Prisma.HoursUncheckedUpdateManyWithoutPlayerNestedInput
+  queues?: Prisma.QueueUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateManyInput = {
@@ -352,11 +359,26 @@ export type PlayerUpdateOneRequiredWithoutHoursNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlayerUpdateToOneWithWhereWithoutHoursInput, Prisma.PlayerUpdateWithoutHoursInput>, Prisma.PlayerUncheckedUpdateWithoutHoursInput>
 }
 
+export type PlayerCreateNestedOneWithoutQueuesInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutQueuesInput, Prisma.PlayerUncheckedCreateWithoutQueuesInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutQueuesInput
+  connect?: Prisma.PlayerWhereUniqueInput
+}
+
+export type PlayerUpdateOneRequiredWithoutQueuesNestedInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutQueuesInput, Prisma.PlayerUncheckedCreateWithoutQueuesInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutQueuesInput
+  upsert?: Prisma.PlayerUpsertWithoutQueuesInput
+  connect?: Prisma.PlayerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlayerUpdateToOneWithWhereWithoutQueuesInput, Prisma.PlayerUpdateWithoutQueuesInput>, Prisma.PlayerUncheckedUpdateWithoutQueuesInput>
+}
+
 export type PlayerCreateWithoutAssignedConsoleInput = {
   id?: string
   name: string
   phone: string
   hours?: Prisma.HoursCreateNestedManyWithoutPlayerInput
+  queues?: Prisma.QueueCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutAssignedConsoleInput = {
@@ -364,6 +386,7 @@ export type PlayerUncheckedCreateWithoutAssignedConsoleInput = {
   name: string
   phone: string
   hours?: Prisma.HoursUncheckedCreateNestedManyWithoutPlayerInput
+  queues?: Prisma.QueueUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutAssignedConsoleInput = {
@@ -387,6 +410,7 @@ export type PlayerUpdateWithoutAssignedConsoleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   hours?: Prisma.HoursUpdateManyWithoutPlayerNestedInput
+  queues?: Prisma.QueueUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutAssignedConsoleInput = {
@@ -394,6 +418,7 @@ export type PlayerUncheckedUpdateWithoutAssignedConsoleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   hours?: Prisma.HoursUncheckedUpdateManyWithoutPlayerNestedInput
+  queues?: Prisma.QueueUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateWithoutHoursInput = {
@@ -401,6 +426,7 @@ export type PlayerCreateWithoutHoursInput = {
   name: string
   phone: string
   assignedConsole?: Prisma.ConsoleCreateNestedOneWithoutAssignedPlayerInput
+  queues?: Prisma.QueueCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutHoursInput = {
@@ -408,6 +434,7 @@ export type PlayerUncheckedCreateWithoutHoursInput = {
   name: string
   phone: string
   consoleId?: string | null
+  queues?: Prisma.QueueUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutHoursInput = {
@@ -431,6 +458,7 @@ export type PlayerUpdateWithoutHoursInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   assignedConsole?: Prisma.ConsoleUpdateOneWithoutAssignedPlayerNestedInput
+  queues?: Prisma.QueueUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutHoursInput = {
@@ -438,6 +466,55 @@ export type PlayerUncheckedUpdateWithoutHoursInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   consoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  queues?: Prisma.QueueUncheckedUpdateManyWithoutPlayerNestedInput
+}
+
+export type PlayerCreateWithoutQueuesInput = {
+  id?: string
+  name: string
+  phone: string
+  assignedConsole?: Prisma.ConsoleCreateNestedOneWithoutAssignedPlayerInput
+  hours?: Prisma.HoursCreateNestedManyWithoutPlayerInput
+}
+
+export type PlayerUncheckedCreateWithoutQueuesInput = {
+  id?: string
+  name: string
+  phone: string
+  consoleId?: string | null
+  hours?: Prisma.HoursUncheckedCreateNestedManyWithoutPlayerInput
+}
+
+export type PlayerCreateOrConnectWithoutQueuesInput = {
+  where: Prisma.PlayerWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlayerCreateWithoutQueuesInput, Prisma.PlayerUncheckedCreateWithoutQueuesInput>
+}
+
+export type PlayerUpsertWithoutQueuesInput = {
+  update: Prisma.XOR<Prisma.PlayerUpdateWithoutQueuesInput, Prisma.PlayerUncheckedUpdateWithoutQueuesInput>
+  create: Prisma.XOR<Prisma.PlayerCreateWithoutQueuesInput, Prisma.PlayerUncheckedCreateWithoutQueuesInput>
+  where?: Prisma.PlayerWhereInput
+}
+
+export type PlayerUpdateToOneWithWhereWithoutQueuesInput = {
+  where?: Prisma.PlayerWhereInput
+  data: Prisma.XOR<Prisma.PlayerUpdateWithoutQueuesInput, Prisma.PlayerUncheckedUpdateWithoutQueuesInput>
+}
+
+export type PlayerUpdateWithoutQueuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedConsole?: Prisma.ConsoleUpdateOneWithoutAssignedPlayerNestedInput
+  hours?: Prisma.HoursUpdateManyWithoutPlayerNestedInput
+}
+
+export type PlayerUncheckedUpdateWithoutQueuesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  consoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hours?: Prisma.HoursUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 
@@ -447,10 +524,12 @@ export type PlayerUncheckedUpdateWithoutHoursInput = {
 
 export type PlayerCountOutputType = {
   hours: number
+  queues: number
 }
 
 export type PlayerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   hours?: boolean | PlayerCountOutputTypeCountHoursArgs
+  queues?: boolean | PlayerCountOutputTypeCountQueuesArgs
 }
 
 /**
@@ -470,6 +549,13 @@ export type PlayerCountOutputTypeCountHoursArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.HoursWhereInput
 }
 
+/**
+ * PlayerCountOutputType without action
+ */
+export type PlayerCountOutputTypeCountQueuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QueueWhereInput
+}
+
 
 export type PlayerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -478,6 +564,7 @@ export type PlayerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   consoleId?: boolean
   assignedConsole?: boolean | Prisma.Player$assignedConsoleArgs<ExtArgs>
   hours?: boolean | Prisma.Player$hoursArgs<ExtArgs>
+  queues?: boolean | Prisma.Player$queuesArgs<ExtArgs>
   _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
 
@@ -508,6 +595,7 @@ export type PlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type PlayerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignedConsole?: boolean | Prisma.Player$assignedConsoleArgs<ExtArgs>
   hours?: boolean | Prisma.Player$hoursArgs<ExtArgs>
+  queues?: boolean | Prisma.Player$queuesArgs<ExtArgs>
   _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlayerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -522,6 +610,7 @@ export type $PlayerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     assignedConsole: Prisma.$ConsolePayload<ExtArgs> | null
     hours: Prisma.$HoursPayload<ExtArgs>[]
+    queues: Prisma.$QueuePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -924,6 +1013,7 @@ export interface Prisma__PlayerClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   assignedConsole<T extends Prisma.Player$assignedConsoleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Player$assignedConsoleArgs<ExtArgs>>): Prisma.Prisma__ConsoleClient<runtime.Types.Result.GetResult<Prisma.$ConsolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   hours<T extends Prisma.Player$hoursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Player$hoursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HoursPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  queues<T extends Prisma.Player$queuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Player$queuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1398,6 +1488,30 @@ export type Player$hoursArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.HoursScalarFieldEnum | Prisma.HoursScalarFieldEnum[]
+}
+
+/**
+ * Player.queues
+ */
+export type Player$queuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Queue
+   */
+  select?: Prisma.QueueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Queue
+   */
+  omit?: Prisma.QueueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QueueInclude<ExtArgs> | null
+  where?: Prisma.QueueWhereInput
+  orderBy?: Prisma.QueueOrderByWithRelationInput | Prisma.QueueOrderByWithRelationInput[]
+  cursor?: Prisma.QueueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QueueScalarFieldEnum | Prisma.QueueScalarFieldEnum[]
 }
 
 /**

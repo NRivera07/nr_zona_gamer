@@ -43,15 +43,24 @@ export default function PlayersPage() {
 
   const deletePlayerMutation = useMutation({
     mutationFn: async (playerId: string) => {
-      await fetch(`/api/players/${playerId}`, {
+      const res = await fetch(`/api/players/${playerId}`, {
         method: "DELETE",
       });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
+      return data;
     },
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["players"] });
       toast.success("Jugador eliminado exitosamente");
       setDeleteModalOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
