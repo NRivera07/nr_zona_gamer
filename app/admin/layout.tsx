@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -9,6 +10,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const logout = async () => {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+
+    queryClient.clear();
+    window.location.href = "/";
+  };
 
   return (
     <div className="flex min-h-screen text-white">
@@ -32,11 +44,7 @@ export default function AdminLayout({
             href="/admin/hours"
             onClick={() => setOpen(false)}
           />
-          <MenuItem
-            label="⚙️ Configuración"
-            href="/"
-            onClick={() => setOpen(false)}
-          />
+          <MenuItem label="⏻ Cerrar sesión" href="/" onClick={logout} />
         </nav>
       </aside>
 
@@ -80,11 +88,7 @@ export default function AdminLayout({
                   href="/admin/hours"
                   onClick={() => setOpen(false)}
                 />
-                <MenuItem
-                  label="⚙️ Configuración"
-                  href="/"
-                  onClick={() => setOpen(false)}
-                />
+                <MenuItem label="⏻ Cerrar sesión" href="/" onClick={logout} />
               </nav>
             </div>
           </div>

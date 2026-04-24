@@ -21,7 +21,7 @@ export function LoginModal({ open, setOpen }: LoginModalProps) {
       return;
     }
     setLoading(true);
-    const res = await fetch("/api/auth", {
+    const res = await fetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({ name, password }),
     });
